@@ -143,26 +143,10 @@ function GoalsPage() {
                   <span>{formatMoney(g.monthly_contribution)}/mo planned</span>
                 </div>
 
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Add to saved:</span>
-                  <input
-                    type="number"
-                    min={0}
-                    inputMode="decimal"
-                    placeholder="0"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        const v = Number((e.target as HTMLInputElement).value);
-                        if (v > 0) {
-                          updateGoal(g.id, { saved_amount: g.saved_amount + v });
-                          (e.target as HTMLInputElement).value = "";
-                        }
-                      }
-                    }}
-                    className="w-24 rounded-lg border border-input bg-background px-2 py-1 text-sm outline-none focus:border-primary"
-                  />
-                  <span className="text-xs text-muted-foreground">press Enter</span>
-                </div>
+                <AddToSaved
+                  onAdd={(v) => updateGoal(g.id, { saved_amount: g.saved_amount + v })}
+                />
+
               </div>
             );
           })}
