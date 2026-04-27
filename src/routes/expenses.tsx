@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { PageHeader } from "../components/PageHeader";
 import { useBudget } from "../lib/budget-store";
-import { formatMoney, todayISO } from "../lib/storage";
+import { formatMoney, todayISO, type Expense } from "../lib/storage";
 
 export const Route = createFileRoute("/expenses")({
   head: () => ({
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/expenses")({
 });
 
 function ExpensesPage() {
-  const { categories, expenses, addExpense, deleteExpense } = useBudget();
+  const { categories, expenses, addExpense, updateExpense, deleteExpense } = useBudget();
 
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState(categories[0]?.name ?? "");
@@ -34,6 +34,35 @@ function ExpensesPage() {
   // Quick add popup state
   const [quickFor, setQuickFor] = useState<string | null>(null);
   const [quickAmount, setQuickAmount] = useState("");
+
+  // Edit modal state
+  const [editing, setEditing] = useState<Expense | null>(null);
+  const [editAmount, setEditAmount] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+  const [editNote, setEditNote] = useState("");
+  const [editDate, setEditDate] = useState("");
+
+  useEffect(() => {
+    if (editing) {
+      setEditAmount(String(editing.amount));
+      setEditCategory(editing.category);
+      setEditNote(editing.note);
+      setEditDate(editing.date);
+    }
+  }, [editing]);
+
+  function handleEditSave() {
+    if (!editing) return;
+    const amt = Number(editAmount);
+    if (!amt || amt <= 0) return;
+    updateExpense(editing.id, {
+      amount: amt,
+      category: editCategory || categories[0]?.name || "Other",
+      note: editNote.trim(),
+      date: editDate || todayISO(),
+    });
+    setEditing(null);
+  }
 
   function handleSave() {
     const amt = Number(amount);
