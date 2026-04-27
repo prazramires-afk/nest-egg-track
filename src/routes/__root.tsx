@@ -39,7 +39,7 @@ export const Route = createRootRoute({
           "A warm, offline-first budgeting app for couples and young families. Track expenses, plan budgets, and save for family goals — all on your device.",
       },
       { name: "author", content: "Our Family Budget" },
-      { property: "og:title", content: "Our Family Budget" },
+      { property: "og:title", content: "Our Family Budget — Friendly offline budgeting" },
       {
         property: "og:description",
         content:
@@ -47,6 +47,12 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Our Family Budget — Friendly offline budgeting" },
+      { name: "description", content: "Family Fund Flow is a simple, offline-first mobile web app for couples to track expenses and plan budgets." },
+      { property: "og:description", content: "Family Fund Flow is a simple, offline-first mobile web app for couples to track expenses and plan budgets." },
+      { name: "twitter:description", content: "Family Fund Flow is a simple, offline-first mobile web app for couples to track expenses and plan budgets." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3bd84fb3-35dc-45c7-8c69-21286fed44f8/id-preview-95d17439--547f90c9-b933-44ba-bcfd-d1878e8bc1d0.lovable.app-1777303119915.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3bd84fb3-35dc-45c7-8c69-21286fed44f8/id-preview-95d17439--547f90c9-b933-44ba-bcfd-d1878e8bc1d0.lovable.app-1777303119915.png" },
     ],
     links: [
       {
