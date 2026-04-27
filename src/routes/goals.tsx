@@ -155,3 +155,38 @@ function GoalsPage() {
     </div>
   );
 }
+
+function AddToSaved({ onAdd }: { onAdd: (amount: number) => void }) {
+  const [value, setValue] = useState("");
+
+  function submit() {
+    const v = Number(value);
+    if (!v || v <= 0) return;
+    onAdd(v);
+    setValue("");
+  }
+
+  return (
+    <div className="mt-3 flex items-center gap-2">
+      <span className="text-xs text-muted-foreground">Add to saved:</span>
+      <input
+        type="number"
+        min={0}
+        inputMode="decimal"
+        placeholder="0"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") submit();
+        }}
+        className="w-24 rounded-lg border border-input bg-background px-2 py-1 text-sm outline-none focus:border-primary"
+      />
+      <button
+        onClick={submit}
+        className="rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
+      >
+        Add
+      </button>
+    </div>
+  );
+}
