@@ -245,19 +245,114 @@ function ExpensesPage() {
                       <span>{new Date(e.date).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <button
-                    onClick={() => deleteExpense(e.id)}
-                    aria-label="Delete expense"
-                    className="rounded-xl p-2 text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => setEditing(e)}
+                      aria-label="Edit expense"
+                      className="rounded-xl p-2 text-muted-foreground transition hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => deleteExpense(e.id)}
+                      aria-label="Delete expense"
+                      className="rounded-xl p-2 text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </li>
               );
             })}
           </ul>
         )}
       </section>
+
+      {editing ? (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-4 sm:items-center"
+          onClick={() => setEditing(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-card p-5 shadow-lg"
+            onClick={(ev) => ev.stopPropagation()}
+          >
+            <h3 className="text-base font-semibold text-foreground">Edit expense</h3>
+
+            <div className="mt-3 space-y-3">
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Amount</label>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="text-xl font-bold text-foreground">$</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    inputMode="decimal"
+                    value={editAmount}
+                    onChange={(ev) => setEditAmount(ev.target.value)}
+                    className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xl font-bold text-foreground outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Category</label>
+                <select
+                  value={editCategory}
+                  onChange={(ev) => setEditCategory(ev.target.value)}
+                  className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+                >
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.name}>
+                      {c.icon} {c.name}
+                    </option>
+                  ))}
+                  {/* Preserve original category if it no longer exists */}
+                  {editing && !categories.some((c) => c.name === editing.category) ? (
+                    <option value={editing.category}>{editing.category}</option>
+                  ) : null}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Note</label>
+                <input
+                  value={editNote}
+                  onChange={(ev) => setEditNote(ev.target.value)}
+                  placeholder="Optional note"
+                  className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Date</label>
+                <input
+                  type="date"
+                  value={editDate}
+                  onChange={(ev) => setEditDate(ev.target.value)}
+                  className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => setEditing(null)}
+                className="flex-1 rounded-2xl bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEditSave}
+                className="flex-1 rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
