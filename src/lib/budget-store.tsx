@@ -36,6 +36,7 @@ type BudgetContextValue = {
   deleteCategory: (id: string) => void;
 
   addExpense: (input: Omit<Expense, "id">) => void;
+  updateExpense: (id: string, patch: Partial<Omit<Expense, "id">>) => void;
   deleteExpense: (id: string) => void;
 
   addGoal: (input: Omit<Goal, "id">) => void;
@@ -95,6 +96,12 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
   const addExpense = useCallback((input: Omit<Expense, "id">) => {
     setExpenses((prev) => [{ ...input, id: newId() }, ...prev]);
   }, []);
+  const updateExpense = useCallback(
+    (id: string, patch: Partial<Omit<Expense, "id">>) => {
+      setExpenses((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
+    },
+    [],
+  );
   const deleteExpense = useCallback((id: string) => {
     setExpenses((prev) => prev.filter((e) => e.id !== id));
   }, []);
@@ -121,6 +128,7 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
       updateCategory,
       deleteCategory,
       addExpense,
+      updateExpense,
       deleteExpense,
       addGoal,
       updateGoal,
@@ -137,6 +145,7 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
       updateCategory,
       deleteCategory,
       addExpense,
+      updateExpense,
       deleteExpense,
       addGoal,
       updateGoal,
