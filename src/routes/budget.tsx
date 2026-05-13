@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Trash2, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Trash2, Plus, Check } from "lucide-react";
 import { PageHeader } from "../components/PageHeader";
 import { useBudget } from "../lib/budget-store";
 
@@ -37,6 +37,23 @@ function BudgetPage() {
   const [newIcon, setNewIcon] = useState("✨");
   const [newLimit, setNewLimit] = useState("");
 
+  const [incomeDraft, setIncomeDraft] = useState<string>("");
+  const [justSaved, setJustSaved] = useState(false);
+
+  // Sync draft from store whenever the saved income changes (e.g. after hydration).
+  useEffect(() => {
+    setIncomeDraft(income.monthly_income ? String(income.monthly_income) : "");
+  }, [income.monthly_income]);
+
+  const draftValue = Number(incomeDraft) || 0;
+  const isDirty = draftValue !== (income.monthly_income || 0);
+
+  function handleSaveIncome() {
+    setMonthlyIncome(draftValue);
+    setJustSaved(true);
+    window.setTimeout(() => setJustSaved(false), 1500);
+  }
+
   function handleAdd() {
     const name = newName.trim();
     if (!name) return;
@@ -67,13 +84,34 @@ function BudgetPage() {
             type="number"
             min={0}
             step="0.01"
-            value={income.monthly_income || ""}
+            value={incomeDraft}
             placeholder="0"
-            onChange={(e) => setMonthlyIncome(Number(e.target.value))}
+            onChange={(e) => setIncomeDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && isDirty) handleSaveIncome();
+            }}
             className="w-full rounded-xl border border-input bg-background px-3 py-2 text-2xl font-bold text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
+          <button
+            type="button"
+            onClick={handleSaveIncome}
+            disabled={!isDirty}
+            className="inline-flex items-center gap-1 rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {justSaved ? (
+              <>
+                <Check className="h-4 w-4" aria-hidden /> Saved
+              </>
+            ) : (
+              "Save"
+            )}
+          </button>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Auto-saves as you type.</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {isDirty
+            ? "Tap Save to store your income. You can edit it anytime."
+            : "Saved on your device. You can edit it anytime."}
+        </p>
       </section>
 
       <section className="rounded-2xl bg-card p-5 shadow-sm">
