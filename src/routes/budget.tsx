@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Trash2, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Trash2, Plus, Check } from "lucide-react";
 import { PageHeader } from "../components/PageHeader";
 import { useBudget } from "../lib/budget-store";
 
