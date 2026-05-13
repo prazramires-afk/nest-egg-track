@@ -37,6 +37,23 @@ function BudgetPage() {
   const [newIcon, setNewIcon] = useState("✨");
   const [newLimit, setNewLimit] = useState("");
 
+  const [incomeDraft, setIncomeDraft] = useState<string>("");
+  const [justSaved, setJustSaved] = useState(false);
+
+  // Sync draft from store whenever the saved income changes (e.g. after hydration).
+  useEffect(() => {
+    setIncomeDraft(income.monthly_income ? String(income.monthly_income) : "");
+  }, [income.monthly_income]);
+
+  const draftValue = Number(incomeDraft) || 0;
+  const isDirty = draftValue !== (income.monthly_income || 0);
+
+  function handleSaveIncome() {
+    setMonthlyIncome(draftValue);
+    setJustSaved(true);
+    window.setTimeout(() => setJustSaved(false), 1500);
+  }
+
   function handleAdd() {
     const name = newName.trim();
     if (!name) return;
