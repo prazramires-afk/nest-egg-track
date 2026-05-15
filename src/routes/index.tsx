@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { useBudget } from "../lib/budget-store";
 import {
@@ -45,6 +45,10 @@ function getHealth(percentLeft: number): Health {
 
 function HomePage() {
   const { income, expenses, goals, hydrated } = useBudget();
+  const [greet, setGreet] = useState("Hello");
+  useEffect(() => {
+    setGreet(greeting());
+  }, []);
 
   const monthlyIncome = income.monthly_income;
 
@@ -75,7 +79,7 @@ function HomePage() {
       <PageHeader
         title={
           <>
-            {greeting()}, Family <span aria-hidden>👨‍👩‍👧</span>
+            {greet}, Family <span aria-hidden>👨‍👩‍👧</span>
           </>
         }
         subtitle="Monthly Overview"
