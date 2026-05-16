@@ -53,12 +53,16 @@ function HomePage() {
   const monthlyIncome = income.monthly_income;
 
   const totalSpent = useMemo(
-    () => expenses.filter((e) => isInCurrentMonth(e.date)).reduce((s, e) => s + e.amount, 0),
-    [expenses],
+    () =>
+      hydrated
+        ? expenses.filter((e) => isInCurrentMonth(e.date)).reduce((s, e) => s + e.amount, 0)
+        : 0,
+    [expenses, hydrated],
   );
 
   const remaining = monthlyIncome - totalSpent;
-  const remainingDays = daysRemainingThisMonth();
+  const remainingDays = hydrated ? daysRemainingThisMonth() : 1;
+  const monthDays = hydrated ? daysInCurrentMonth() : 0;
   const dailySafe = remainingDays > 0 ? Math.max(0, remaining) / remainingDays : 0;
   const percentLeft = monthlyIncome > 0 ? remaining / monthlyIncome : 0;
   const health = getHealth(percentLeft);
@@ -154,7 +158,7 @@ function HomePage() {
           <span className="text-primary">{formatMoney(dailySafe)}</span>/day
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          {remainingDays} of {daysInCurrentMonth()} days left this month
+          {hydrated ? `${remainingDays} of ${monthDays} days left this month` : "Loading month details"}
         </p>
       </section>
 

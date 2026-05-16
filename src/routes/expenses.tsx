@@ -29,7 +29,7 @@ function ExpensesPage() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState(categories[0]?.name ?? "");
   const [note, setNote] = useState("");
-  const [date, setDate] = useState(todayISO());
+  const [date, setDate] = useState("");
 
   // Quick add popup state
   const [quickFor, setQuickFor] = useState<string | null>(null);
@@ -41,6 +41,10 @@ function ExpensesPage() {
   const [editCategory, setEditCategory] = useState("");
   const [editNote, setEditNote] = useState("");
   const [editDate, setEditDate] = useState("");
+
+  useEffect(() => {
+    setDate((current) => current || todayISO());
+  }, []);
 
   useEffect(() => {
     if (editing) {
@@ -242,7 +246,7 @@ function ExpensesPage() {
                     </div>
                     <div className="mt-0.5 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                       <span className="truncate">{e.note || "—"}</span>
-                      <span>{new Date(e.date).toLocaleDateString()}</span>
+                      <span>{e.date}</span>
                     </div>
                   </div>
                   <div className="flex items-center">
