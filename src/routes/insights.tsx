@@ -36,10 +36,12 @@ type Insight = {
 };
 
 function InsightsPage() {
-  const { categories, expenses, income } = useBudget();
+  const { categories, expenses, income, hydrated } = useBudget();
 
   const insights = useMemo<Insight[]>(() => {
     const list: Insight[] = [];
+    if (!hydrated) return list;
+
     const monthExpenses = expenses.filter((e) => isInCurrentMonth(e.date));
     const daysPassed = Math.max(1, daysPassedThisMonth());
     const totalDays = daysInCurrentMonth();
@@ -93,7 +95,7 @@ function InsightsPage() {
     }
 
     return list;
-  }, [categories, expenses, income.monthly_income]);
+  }, [categories, expenses, hydrated, income.monthly_income]);
 
   return (
     <div className="space-y-4">
